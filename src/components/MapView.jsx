@@ -211,8 +211,8 @@ const MapViewWithSidebar = () => {
     };
 
     return (
-        <div style={{ display: 'flex', height: '100vh' }}>
-            <div style={{ width: '320px', padding: '1rem', borderRight: '1px solid #ccc', background: '#fafafa', overflowY: 'auto' }}>
+        <div className="mapview-sidebar" style={{ display: 'flex', height: 'calc(100vh - 80px)' }}>
+            <div className="sidebar" style={{ width: '320px', height: '100%', padding: '1rem', borderRight: '1px solid #ccc', overflowY: 'auto' }}>
                 <img src="src/assets/pistol-pete.png"/>
                 <h3>Campus Map Layers</h3>
 
@@ -278,7 +278,7 @@ const MapViewWithSidebar = () => {
                 )}
             </div>
 
-            <div ref={mapContainer} style={{ flexGrow: 2 }} />
+            <div ref={mapContainer} style={{ flexGrow: 1, height: '100%' }} />
 
         </div>
     );
