@@ -1,6 +1,4 @@
-Certainly! Here's a comprehensive `README.md` file tailored for your OSU Campus Map project. This README includes sections such as Project Title, Description, Features, Installation, Usage, Contributing, License, and Acknowledgments. You can customize it further to suit your project's specifics.
 
----
 
 # 🧭 Oklahoma State University Campus Map
 
