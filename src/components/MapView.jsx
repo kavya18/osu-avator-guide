@@ -271,7 +271,7 @@ const MapViewWithSidebar = () => {
 
     return (
         <div className="mapview-sidebar" style={{ display: 'flex', height: 'calc(100vh - 80px)', paddingTop: '1rem'}}>
-            <div className="sidebar" style={{ width: '320px', height: '100%', padding: '1rem black', borderRight: '1px solid #ccc', overflowY: 'auto', backgroundColor: '#f3f0e5' }}>
+            <div className="sidebar" style={{ width: '320px', height: '100%', padding: '1rem black', borderRight: '1px solid #ccc', overflowY: 'auto', backgroundColor: '#F9EFE2' }}>
                 <img
                     src={isSpeaking ? 'src/assets/pistol-pete-speaking.svg' : 'src/assets/pistol-pete-speaking.svg'}
                     alt="Pistol Pete"
