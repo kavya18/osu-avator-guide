@@ -14,6 +14,7 @@ const MapViewWithSidebar = () => {
     const mapContainer = useRef(null);
     const mapRef = useRef(null);
     const popupRef = useRef(null);
+    const wsRef = useRef(null);
     const [selectedFeature, setSelectedFeature] = useState(null);
     const [highlightedId, setHighlightedId] = useState(null);
     const [isSpeaking, setIsSpeaking] = useState(false);
@@ -30,6 +31,26 @@ const MapViewWithSidebar = () => {
     ]);
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+
+    // WebSocket setup
+    useEffect(() => {
+        wsRef.current = new WebSocket('ws://localhost:8000/ws');
+        
+        wsRef.current.onopen = () => console.log('WebSocket connected');
+        
+        wsRef.current.onmessage = (event) => {
+            // Receive description from server and speak it
+            const description = event.data;
+            console.log('Received description:', description);
+            speak(description);
+        };
+        
+        wsRef.current.onerror = err => console.error('WebSocket error:', err);
+        
+        return () => {
+            if (wsRef.current) wsRef.current.close();
+        };
+    }, []);
 
     useEffect(() => {
         const map = new mapboxgl.Map({
@@ -112,8 +133,9 @@ const MapViewWithSidebar = () => {
                     setSelectedFeature(feature);
                     setHighlightedId(feature.id);
                     map.setFilter('highlight-feature', ['==', ['id'], feature.id]);
-                    const info = await fetchBuildingInfo(feature.properties.name);
-                    speak(info);
+                    
+                    // We'll no longer call fetchBuildingInfo and speak here
+                    // The description will come from the WebSocket response
 
                     if (popupRef.current) {
                         popupRef.current.remove();
@@ -133,6 +155,18 @@ const MapViewWithSidebar = () => {
                     }
 
                     map.flyTo({ center: e.lngLat, zoom: 18 });
+                    
+                    // Build and send the report via WebSocket
+                    const props = feature.properties;
+                    const reportLines = ['Selected Feature'];
+                    for (let [k, v] of Object.entries(props)) {
+                        reportLines.push(`${k}: ${v}`);
+                    }
+                    const report = reportLines.join('\n');
+                    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+                        wsRef.current.send(report);
+                        console.log('Sent feature report:\n' + report);
+                    }
                 }
             });
         });
@@ -213,6 +247,18 @@ const MapViewWithSidebar = () => {
                 .setHTML(`<strong>${feature.properties.name || 'Feature'}</strong>`)
                 .addTo(map);
             popupRef.current = popup;
+            
+            // Build and send the report via WebSocket when clicking on search results
+            const props = feature.properties;
+            const reportLines = ['Selected Feature'];
+            for (let [k, v] of Object.entries(props)) {
+                reportLines.push(`${k}: ${v}`);
+            }
+            const report = reportLines.join('\n');
+            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+                wsRef.current.send(report);
+                console.log('Sent feature report:\n' + report);
+            }
         }
     };
 
@@ -226,19 +272,8 @@ const MapViewWithSidebar = () => {
 
 
     const fetchBuildingInfo = async (buildingName) => {
-        // const prompt = `Provide detailed information about the ${buildingName} at Oklahoma State University, including its history, purpose, and any notable facts.`;
+        // This function is kept for voice command functionality
         try {
-            // const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            //     model: 'gpt-4',
-            //     messages: [{ role: 'user', content: prompt }],
-            // }, {
-            //     headers: {
-            //         'Authorization': `Bearer YOUR_OPENAI_API_KEY`,
-            //         'Content-Type': 'application/json',
-            //     },
-            // });
-
-            // return response.data.choices[0].message.content;
             return buildingName;
         } catch (error) {
             console.error('Error fetching building info:', error);
