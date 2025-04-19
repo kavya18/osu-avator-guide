@@ -1,118 +1,111 @@
+# 🧭 Oklahoma State University OSU Explorer
 
-
-# 🧭 Oklahoma State University Campus Map
-
-An interactive web application that visualizes the Oklahoma State University (OSU) Stillwater campus. Explore buildings, amenities, and green spaces with features like search, filtering, and dark mode support.
-
-![OSU Campus Map Screenshot](./assets/osu-campus-map-screenshot.png)
+An interactive web application that visualizes the Oklahoma State University (OSU) Stillwater campus. Explore buildings, amenities, and green spaces with intelligent search, real-time voice interaction, and AI-enhanced descriptions.
 
 ---
 
+![OSU Campus Map Screenshot](./public/screenshot.png) 
+
 ## 📋 Table of Contents
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [Features](#-features)
+- [Installation](#️-installation)
+- [Usage](#-usage)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Acknowledgments](#-acknowledgments)
 
 ---
 
 ## 🚀 Features
 
-- **Interactive Map**: Navigate through the OSU Stillwater campus with an intuitive interface.
-- **Search Functionality**: Search for campus features with partial and in-between word matching.
-- **Layer Controls**: Toggle visibility of buildings, amenities, leisure areas, and land use.
+- **Interactive 3D Map**: Navigate the OSU Stillwater campus with zoom, tilt, and pitch features using Mapbox GL JS.
+- **AI-Powered Popups**: Get brief, GPT-generated building descriptions when clicking on map features.
+- **Voice Assistant ("Ask Pete")**: Click the mic icon and speak naturally (e.g., *“Tell me about Edmon Low Library”*).
+- **WebSocket Integration**: Real-time description streaming from your backend via a persistent connection.
+- **Fuzzy Search**: Type partial names or misspellings — powered by Fuse.js — to find buildings and amenities.
+- **Layer Controls**: Toggle visibility of buildings, amenities, leisure areas, and land use with checkboxes.
 - **Amenity Filtering**: Filter amenities by type (e.g., cafe, library, parking).
-- **Feature Highlighting**: Click on features to highlight them and view details.
-- **Dark Mode Support**: Switch between light and dark themes for better visibility.
-- **Responsive Design**: Optimized for various screen sizes and devices.
+- **Feature Highlighting**: Click on features to highlight them, fly to their location, and view AI-generated context.
+- **Responsive Design**: Optimized for desktop and mobile devices.
+- **(Optional) Dark Mode**: Theme switcher support (if implemented in future).
 
 ---
 
 ## 🛠️ Installation
 
-1. **Clone the repository:**
+Clone the repository:
 
-   ```bash
-   git clone https://github.com/yourusername/osu-campus-map.git
-   cd osu-campus-map
-   ```
+```bash
+git clone https://github.com/yourusername/osu-campus-map.git
+cd osu-campus-map
+Install dependencies:
 
+bash
+Copy
+Edit
+npm install
+Start the development server:
 
-2. **Install dependencies:**
+bash
+Copy
+Edit
+npm run dev
+Access the application:
 
-   ```bash
-   npm install
-   ```
+Open your browser and navigate to http://localhost:3000
 
+📖 Usage
+Search: Use the sidebar search bar for buildings and features. Fuzzy matching supports typos and partial matches.
 
-3. **Start the development server:**
+Click to Learn: Click on buildings or amenities to get a brief AI description.
 
-   ```bash
-   npm run dev
-   ```
+Voice Assistant: Click 🎙️ to speak with Pete! Try phrases like “Tell me about the Engineering South”.
 
+Layer Toggle: Show/hide layers like buildings, leisure, or landuse in the sidebar.
 
-4. **Access the application:**
+Amenity Filter: Choose from amenity types to refine map results (e.g., show only ATMs or cafes).
 
-   Open your browser and navigate to `http://localhost:3000`.
-
----
-
-## 📖 Usage
-
-- **Search**: Use the search bar to find campus features. Supports partial and in-between word matching.
-- **Layer Controls**: Use the sidebar to toggle different map layers.
-- **Amenity Filtering**: Select amenity types from the dropdown to filter displayed features.
-- **Dark Mode**: Click the toggle button in the header to switch themes.
-
----
-
-## 🤝 Contributing
-
+🤝 Contributing
 Contributions are welcome! Please follow these steps:
 
-1. Fork the repository.
-2. Create a new branch:
+Fork the repository.
 
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+Create a new branch:
+
+bash
+Copy
+Edit
+git checkout -b feature/your-feature-name
+Commit your changes:
+
+bash
+Copy
+Edit
+git commit -m 'Add your feature'
+Push to the branch:
+
+bash
+Copy
+Edit
+git push origin feature/your-feature-name
+Open a pull request.
+
+📄 License
 
 
-3. Commit your changes:
+Acknowledgments
+🗺️ Mapbox — for the dynamic mapping platform.
 
-   ```bash
-   git commit -m 'Add your feature'
-   ```
+🧭 OpenStreetMap — for detailed campus geospatial data.
+
+⚛️ React — for building the frontend.
+
+🧠 OpenAI — for GPT-based intelligent descriptions.
+
+📢 Web Speech API — for browser-based voice recognition.
+
+🔶 OSU Brand Management — for official logo and branding guidelines.
 
 
-4. Push to the branch:
 
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-
-5. Open a pull request.
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-## 🙏 Acknowledgments
-
-- [Mapbox](https://www.mapbox.com/) for the mapping platform.
-- [OpenStreetMap](https://www.openstreetmap.org/) contributors for geospatial data.
-- [React](https://reactjs.org/) for the frontend framework.
-- OSU Brand Management for the official logo and branding guidelines.
-
----
-
-Feel free to customize this `README.md` further to match your project's specifics. If you need assistance with any other part of your project, don't hesitate to ask! 
