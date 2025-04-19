@@ -1,12 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react';
 import mapboxgl from 'mapbox-gl';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import DialogflowChat from "./DialogflowChat.jsx";
 
 // ✅ Your Mapbox access token and custom style URL
 mapboxgl.accessToken = 'pk.eyJ1Ijoia3JhbmdhcyIsImEiOiJjbTltNnAzOGMwOWhtMnFwdDRyNXdxNmNuIn0.vQb6BXcXPCQhBfYRP498ew'; // Replace me
-const MAP_STYLE = 'mapbox://styles/krangas/cm9m9p0p400l901s552755bkb'; // Replace with your published style
+// const MAP_STYLE = 'mapbox://styles/krangas/cm9m9p0p400l901s552755bkb'; // Replace with your published style
+const MAP_STYLE = 'mapbox://styles/mapbox/satellite-streets-v12';
+
 
 const MapViewWithSidebar = () => {
     const mapContainer = useRef(null);
@@ -14,6 +16,8 @@ const MapViewWithSidebar = () => {
     const popupRef = useRef(null);
     const [selectedFeature, setSelectedFeature] = useState(null);
     const [highlightedId, setHighlightedId] = useState(null);
+    const [isSpeaking, setIsSpeaking] = useState(false);
+    const [isListening, setIsListening] = useState(false);
     const [layerVisibility, setLayerVisibility] = useState({
         buildings: true,
         amenities: true,
@@ -99,7 +103,7 @@ const MapViewWithSidebar = () => {
                 }
             });
 
-            map.on('click', (e) => {
+            map.on('click', async (e) => {
                 const features = map.queryRenderedFeatures(e.point, {
                     layers: ['buildings', 'amenities', 'leisure', 'landuse'],
                 });
@@ -108,6 +112,8 @@ const MapViewWithSidebar = () => {
                     setSelectedFeature(feature);
                     setHighlightedId(feature.id);
                     map.setFilter('highlight-feature', ['==', ['id'], feature.id]);
+                    const info = await fetchBuildingInfo(feature.properties.name);
+                    speak(info);
 
                     if (popupRef.current) {
                         popupRef.current.remove();
@@ -210,10 +216,71 @@ const MapViewWithSidebar = () => {
         }
     };
 
+    const speak = (text) => {
+        setIsSpeaking(true);
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.onend = () => setIsSpeaking(false);
+        window.speechSynthesis.speak(utterance);
+    };
+
+
+    const fetchBuildingInfo = async (buildingName) => {
+        // const prompt = `Provide detailed information about the ${buildingName} at Oklahoma State University, including its history, purpose, and any notable facts.`;
+        try {
+            // const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            //     model: 'gpt-4',
+            //     messages: [{ role: 'user', content: prompt }],
+            // }, {
+            //     headers: {
+            //         'Authorization': `Bearer YOUR_OPENAI_API_KEY`,
+            //         'Content-Type': 'application/json',
+            //     },
+            // });
+
+            // return response.data.choices[0].message.content;
+            return buildingName;
+        } catch (error) {
+            console.error('Error fetching building info:', error);
+            return 'Sorry, I could not retrieve information about that building at this time.';
+        }
+    };
+
+    const startListening = () => {
+        const recognition = new window.webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        setIsListening(true);
+
+        recognition.onresult = async (event) => {
+            const transcript = event.results[0][0].transcript;
+            setIsListening(false);
+            if (transcript.toLowerCase().includes('tell me about')) {
+                const buildingName = transcript.toLowerCase().replace('tell me about', '').trim();
+                const info = await fetchBuildingInfo(buildingName);
+                speak(info);
+            } else {
+                speak("Sorry, I didn't understand. Try saying 'Tell me about Edmon Low Library'.");
+            }
+        };
+
+        recognition.onerror = () => setIsListening(false);
+        recognition.onend = () => setIsListening(false);
+        recognition.start();
+    };
+
     return (
-        <div className="mapview-sidebar" style={{ display: 'flex', height: 'calc(100vh - 80px)' }}>
-            <div className="sidebar" style={{ width: '320px', height: '100%', padding: '1rem', borderRight: '1px solid #ccc', overflowY: 'auto' }}>
-                <img src="src/assets/pistol-pete.png"/>
+        <div className="mapview-sidebar" style={{ display: 'flex', height: 'calc(100vh - 80px)', paddingTop: '1rem'}}>
+            <div className="sidebar" style={{ width: '320px', height: '100%', padding: '1rem black', borderRight: '1px solid #ccc', overflowY: 'auto', backgroundColor: '#f3f0e5' }}>
+                <img
+                    src={isSpeaking ? 'src/assets/pistol-pete-speaking.svg' : 'src/assets/pistol-pete-speaking.svg'}
+                    alt="Pistol Pete"
+                    style={{  marginRight: '1rem' }}
+                />
+                <button onClick={startListening} disabled={isListening} style={{ padding: '0.6rem 1.2rem', fontSize: '1rem' }}>
+                    🎙️ Ask Pete
+                </button>
+
                 <h3>Campus Map Layers</h3>
 
                 <input
@@ -276,7 +343,12 @@ const MapViewWithSidebar = () => {
                         <button onClick={handleDownload} style={{ marginTop: '10px' }}>Download JSON</button>
                     </div>
                 )}
+                <div  style={{ backgroundColor: 'gray', padding: '1rem' }}>
+                    <DialogflowChat  />
+                </div>
             </div>
+
+
 
             <div ref={mapContainer} style={{ flexGrow: 1, height: '100%' }} />
 
