@@ -11,7 +11,6 @@ function App() {
     }, [darkMode]);
 
     return (
-
         <div className="App">
             <header className="app-header">
                 <img src="src/assets/osu-logo.png" alt="OSU Logo" className="osu-logo" />
@@ -24,7 +23,7 @@ function App() {
                 </button>
             </header>
             <MapViewWithSidebar />
-
+            <DialogflowChat />
         </div>
     );
 }
