@@ -15,7 +15,7 @@ function App() {
             <header className="app-header">
                 <img src="src/assets/osu-logo.png" alt="OSU Logo" className="osu-logo" />
                 <div className="header-text">
-                    <h1>Oklahoma State University Campus Map</h1>
+                    <h1>Oklahoma State University OSU Explorer</h1>
                     <p>Explore buildings, amenities, and green spaces across OSU Stillwater</p>
                 </div>
                 <button onClick={() => setDarkMode(!darkMode)} className="dark-mode-toggle">

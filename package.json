@@ -7,8 +7,7 @@
     "start": "concurrently \"npm run dev\" \"npm run server\"",
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
-    "server": "cd server && node index.js"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@google-cloud/dialogflow": "^7.0.1",
@@ -17,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "fuse.js": "^7.1.0",
     "mapbox-gl": "^3.11.0",
     "mapbox-gl-geocoder": "^2.0.1",
     "react": "^19.0.0",
@@ -43,7 +43,7 @@
     "url": "git+https://github.com/kavya18/osu-avator-guide.git"
   },
   "keywords": [],
-  "proxy": "http://localhost:5173",
+  "proxy": "http://localhost:8000",
   "author": "",
   "license": "ISC",
   "bugs": {

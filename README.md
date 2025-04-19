@@ -1,8 +1,7 @@
-
-
 # 🧭 Oklahoma State University Campus Map
 
-An interactive web application that visualizes the Oklahoma State University (OSU) Stillwater campus. Explore buildings, amenities, and green spaces with features like search, filtering, and dark mode support.
+An interactive web application that visualizes the Oklahoma State University (OSU) Stillwater campus. Explore buildings,
+amenities, and green spaces with features like search, filtering, and dark mode support.
 
 ![OSU Campus Map Screenshot](./assets/osu-campus-map-screenshot.png)
 
@@ -115,4 +114,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-Feel free to customize this `README.md` further to match your project's specifics. If you need assistance with any other part of your project, don't hesitate to ask! 
+Feel free to customize this `README.md` further to match your project's specifics. If you need assistance with any other
+part of your project, don't hesitate to ask! 

@@ -3,6 +3,8 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import DialogflowChat from "./DialogflowChat.jsx";
+import Fuse from 'fuse.js';
+import axios from "axios";
 
 // ✅ Your Mapbox access token and custom style URL
 mapboxgl.accessToken = 'pk.eyJ1Ijoia3JhbmdhcyIsImEiOiJjbTltNnAzOGMwOWhtMnFwdDRyNXdxNmNuIn0.vQb6BXcXPCQhBfYRP498ew'; // Replace me
@@ -58,6 +60,7 @@ const MapViewWithSidebar = () => {
             style: MAP_STYLE,
             center: [-97.0701, 36.1270],
             zoom: 16,
+            pitch: 60,
             bounds: [
                 [-97.085, 36.115],
                 [-97.055, 36.135]
@@ -133,7 +136,13 @@ const MapViewWithSidebar = () => {
                     setSelectedFeature(feature);
                     setHighlightedId(feature.id);
                     map.setFilter('highlight-feature', ['==', ['id'], feature.id]);
-                    
+
+                    let info;
+                    if(feature.properties.name) {
+                        info = await fetchBuildingInfo(feature.properties.name);
+                        speak(info);
+                    }
+
                     // We'll no longer call fetchBuildingInfo and speak here
                     // The description will come from the WebSocket response
 
@@ -147,14 +156,22 @@ const MapViewWithSidebar = () => {
                             : null;
 
                     if (coords) {
+                        // Fetch building description from OpenAI (or fallback if undefined)
+
                         const popup = new mapboxgl.Popup({ closeOnClick: true })
                             .setLngLat(coords)
-                            .setHTML(`<strong>${feature.properties.name || 'Feature'}</strong>`)
+                            .setHTML(`
+                                <div>
+                                    <strong>${feature.properties.name || 'Feature'}</strong>
+                                    <p style="margin-top: 0.5rem;">${info}</p>
+                                </div>
+                            `)
                             .addTo(map);
+
                         popupRef.current = popup;
                     }
 
-                    map.flyTo({ center: e.lngLat, zoom: 18 });
+                    map.flyTo({ center: e.lngLat, zoom: 18, pitch: 60 });
                     
                     // Build and send the report via WebSocket
                     const props = feature.properties;
@@ -163,6 +180,8 @@ const MapViewWithSidebar = () => {
                         reportLines.push(`${k}: ${v}`);
                     }
                     const report = reportLines.join('\n');
+                    console.log("test report");
+                    console.log(report);
                     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
                         wsRef.current.send(report);
                         console.log('Sent feature report:\n' + report);
@@ -181,19 +200,26 @@ const MapViewWithSidebar = () => {
         map.setFilter('amenities', filter);
     }, [amenityFilter]);
 
+
     useEffect(() => {
         const map = mapRef.current;
         if (!map || !searchText) {
             setSearchResults([]);
             return;
         }
+
         const allFeatures = map.querySourceFeatures('osu');
-        const matches = allFeatures.filter(f => {
-            const name = (f.properties.name || '').toLowerCase();
-            return searchText.toLowerCase().split(' ').every(word => name.includes(word));
+        const fuse = new Fuse(allFeatures, {
+            keys: ['properties.name'],
+            threshold: 0.3,           // Lower means stricter match
+            includeScore: true,
         });
+
+        const result = fuse.search(searchText);
+        const matches = result.map(r => r.item);
         setSearchResults(matches);
     }, [searchText]);
+
 
     const toggleLayer = (layerId) => {
         const map = mapRef.current;
@@ -272,14 +298,46 @@ const MapViewWithSidebar = () => {
 
 
     const fetchBuildingInfo = async (buildingName) => {
-        // This function is kept for voice command functionality
+        const prompt = `name: ${buildingName}`;
+
         try {
-            return buildingName;
+            const response = await axios.post(
+                'https://api.openai.com/v1/chat/completions',
+                {
+                    model: 'gpt-3.5-turbo',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: (
+                                "You are a mapping assistant for Oklahoma State University. "
+                                + "you're supposed to describe what that building is in two short, friendly sentences. "
+                                + "Use any clues from the building's name (like 'library', 'engineering', 'stadium', etc.) to guess its purpose or importance on campus."
+                            )
+                        },
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    max_tokens: 60,
+                    temperature: 0.6,
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+
+            return response.data.choices[0].message.content.trim();
+
         } catch (error) {
             console.error('Error fetching building info:', error);
             return 'Sorry, I could not retrieve information about that building at this time.';
         }
     };
+
 
     const startListening = () => {
         const recognition = new window.webkitSpeechRecognition();
@@ -369,12 +427,12 @@ const MapViewWithSidebar = () => {
 
                 {selectedFeature && (
                     <div style={{ marginTop: '1rem' }}>
-                        <h4>Selected Feature</h4>
-                        <ul style={{ fontSize: '14px' }}>
-                            {Object.entries(selectedFeature.properties).map(([k, v]) => (
-                                <li key={k}><strong>{k}</strong>: {v}</li>
-                            ))}
-                        </ul>
+                        {/*<h4>Selected Feature</h4>*/}
+                        {/*<ul style={{ fontSize: '14px' }}>*/}
+                        {/*    {Object.entries(selectedFeature.properties).map(([k, v]) => (*/}
+                        {/*        <li key={k}><strong>{k}</strong>: {v}</li>*/}
+                        {/*    ))}*/}
+                        {/*</ul>*/}
                         <button onClick={handleDownload} style={{ marginTop: '10px' }}>Download JSON</button>
                     </div>
                 )}
