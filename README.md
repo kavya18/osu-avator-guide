@@ -1,10 +1,10 @@
-# 🧭 Oklahoma State University OSU Explorer
+# 🛍️ Oklahoma State University OSU Explorer
 
 An interactive web application that visualizes the Oklahoma State University (OSU) Stillwater campus. Explore buildings, amenities, and green spaces with intelligent search, real-time voice interaction, and AI-enhanced descriptions.
 
 ---
 
-![OSU Campus Map Screenshot](./public/screenshot.png) 
+![OSU Campus Map Screenshot](./public/screenshot.png)
 
 ## 📋 Table of Contents
 
@@ -12,7 +12,6 @@ An interactive web application that visualizes the Oklahoma State University (OS
 - [Installation](#️-installation)
 - [Usage](#-usage)
 - [Contributing](#-contributing)
-- [License](#-license)
 - [Acknowledgments](#-acknowledgments)
 
 ---
@@ -21,7 +20,7 @@ An interactive web application that visualizes the Oklahoma State University (OS
 
 - **Interactive 3D Map**: Navigate the OSU Stillwater campus with zoom, tilt, and pitch features using Mapbox GL JS.
 - **AI-Powered Popups**: Get brief, GPT-generated building descriptions when clicking on map features.
-- **Voice Assistant ("Ask Pete")**: Click the mic icon and speak naturally (e.g., *“Tell me about Edmon Low Library”*).
+- **Voice Assistant ("Ask Pete")**: Click the mic icon and speak naturally (e.g., *"Tell me about Edmon Low Library"*).
 - **WebSocket Integration**: Real-time description streaming from your backend via a persistent connection.
 - **Fuzzy Search**: Type partial names or misspellings — powered by Fuse.js — to find buildings and amenities.
 - **Layer Controls**: Toggle visibility of buildings, amenities, leisure areas, and land use with checkboxes.
@@ -34,78 +33,77 @@ An interactive web application that visualizes the Oklahoma State University (OS
 
 ## 🛠️ Installation
 
-Clone the repository:
+1. **Clone the repository:**
 
 ```bash
 git clone https://github.com/yourusername/osu-campus-map.git
 cd osu-campus-map
-Install dependencies:
+```
 
-bash
-Copy
-Edit
+2. **Install dependencies:**
+
+```bash
 npm install
-Start the development server:
+```
 
-bash
-Copy
-Edit
+3. **Start the development server:**
+
+```bash
 npm run dev
-Access the application:
+# or
+npm start
+```
 
-Open your browser and navigate to http://localhost:3000
+4. **Access the application:**
 
-📖 Usage
-Search: Use the sidebar search bar for buildings and features. Fuzzy matching supports typos and partial matches.
+Open your browser and navigate to `http://localhost:3000`
 
-Click to Learn: Click on buildings or amenities to get a brief AI description.
+---
 
-Voice Assistant: Click 🎙️ to speak with Pete! Try phrases like “Tell me about the Engineering South”.
+## 📖 Usage
 
-Layer Toggle: Show/hide layers like buildings, leisure, or landuse in the sidebar.
+- **Search**: Use the sidebar search bar for buildings and features. Fuzzy matching supports typos and partial matches.
+- **Click to Learn**: Click on buildings or amenities to get a brief AI description.
+- **Voice Assistant**: Click 🎤 to speak with Pete! Try phrases like *"Tell me about the Engineering South"*.
+- **Layer Toggle**: Show/hide layers like buildings, leisure, or landuse in the sidebar.
+- **Amenity Filter**: Choose from amenity types to refine map results (e.g., show only ATMs or cafes).
 
-Amenity Filter: Choose from amenity types to refine map results (e.g., show only ATMs or cafes).
+---
 
-🤝 Contributing
+## 🤝 Contributing
+
 Contributions are welcome! Please follow these steps:
 
-Fork the repository.
+1. Fork the repository.
+2. Create a new branch:
 
-Create a new branch:
-
-bash
-Copy
-Edit
+```bash
 git checkout -b feature/your-feature-name
-Commit your changes:
+```
 
-bash
-Copy
-Edit
+3. Commit your changes:
+
+```bash
 git commit -m 'Add your feature'
-Push to the branch:
+```
 
-bash
-Copy
-Edit
+4. Push to the branch:
+
+```bash
 git push origin feature/your-feature-name
-Open a pull request.
+```
 
-📄 License
-
-
-Acknowledgments
-🗺️ Mapbox — for the dynamic mapping platform.
-
-🧭 OpenStreetMap — for detailed campus geospatial data.
-
-⚛️ React — for building the frontend.
-
-🧠 OpenAI — for GPT-based intelligent descriptions.
-
-📢 Web Speech API — for browser-based voice recognition.
-
-🔶 OSU Brand Management — for official logo and branding guidelines.
+5. Open a pull request.
 
 
+---
+
+## 🙏 Acknowledgments
+
+- 🗺️ [Mapbox](https://www.mapbox.com/) — for the dynamic mapping platform.
+- 🛍️ [OpenStreetMap](https://www.openstreetmap.org/) — for detailed campus geospatial data.
+- ⚛️ [React](https://reactjs.org/) — for building the frontend.
+- 🧠 [OpenAI](https://openai.com/) — for GPT-based intelligent descriptions.
+- 📢 [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) — for browser-based voice recognition.
+- 🔶 OSU Brand Management — for official logo and branding guidelines.
 
