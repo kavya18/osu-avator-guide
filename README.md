@@ -1,4 +1,4 @@
-# 🛍️ Oklahoma State University OSU Explorer
+# Oklahoma State University OSU Explorer
 
 An interactive web application that visualizes the Oklahoma State University (OSU) Stillwater campus. Explore buildings, amenities, and green spaces with intelligent search, real-time voice interaction, and AI-enhanced descriptions.
 
