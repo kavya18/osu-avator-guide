@@ -13,7 +13,7 @@ function App() {
     return (
         <div className="App">
             <header className="app-header">
-                <img src="src/assets/osu-logo.png" alt="OSU Logo" className="osu-logo" />
+                <img src="/osu-logo.png" alt="OSU Logo" className="osu-logo" />
                 <div className="header-text">
                     <h1>Oklahoma State University OSU Explorer</h1>
                     <p>Explore buildings, amenities, and green spaces across OSU Stillwater</p>

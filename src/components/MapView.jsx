@@ -5,6 +5,7 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import DialogflowChat from "./DialogflowChat.jsx";
 import Fuse from 'fuse.js';
 import axios from "axios";
+import './MapViewWithSidebar.css'
 
 // ✅ Your Mapbox access token and custom style URL
 mapboxgl.accessToken = 'pk.eyJ1Ijoia3JhbmdhcyIsImEiOiJjbTltNnAzOGMwOWhtMnFwdDRyNXdxNmNuIn0.vQb6BXcXPCQhBfYRP498ew'; // Replace me
@@ -237,20 +238,6 @@ const MapViewWithSidebar = () => {
         downloadAnchor.click();
     };
 
-    const handleClearFilters = () => {
-        setAmenityFilter('');
-        setSearchText('');
-        setSearchResults([]);
-        setHighlightedId(null);
-        const map = mapRef.current;
-        if (map && map.getLayer('highlight-feature')) {
-            map.setFilter('highlight-feature', ['==', ['id'], -1]);
-        }
-        if (popupRef.current) {
-            popupRef.current.remove();
-        }
-    };
-
     const handleResultClick = (feature) => {
         const map = mapRef.current;
         const center = feature.geometry.type === 'Point'
@@ -363,14 +350,14 @@ const MapViewWithSidebar = () => {
     };
 
     return (
-        <div className="mapview-sidebar" style={{ display: 'flex', height: 'calc(100vh - 80px)', paddingTop: '1rem'}}>
-            <div className="sidebar" style={{ width: '320px', height: '100%', padding: '1rem black', overflowY: 'auto' }}>
+        <div className="mapview-sidebar">
+            <div className="sidebar">
                 <img
-                    src={isSpeaking ? 'src/assets/pistol-pete-speaking.svg' : 'src/assets/pistol-pete.svg'}
+                    src={isSpeaking ? '/pistol-pete-speaking.svg' : '/pistol-pete.svg'}
                     alt="Pistol Pete"
-                    style={{  marginRight: '1rem' }}
+                    className="pistol-pete-img"
                 />
-                <button onClick={startListening} disabled={isListening} style={{ padding: '0.6rem 1.2rem', fontSize: '1rem' }}>
+                <button onClick={startListening} disabled={isListening}>
                     🎙️ Ask Pete
                 </button>
 
@@ -381,18 +368,16 @@ const MapViewWithSidebar = () => {
                     placeholder="Search campus features…"
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
-                    style={{ width: '100%', marginBottom: '8px' }}
                 />
 
                 {searchResults.length > 0 && (
-                    <ul style={{ maxHeight: '160px', overflowY: 'auto', paddingLeft: '1rem' }}>
+                    <ul>
                         {searchResults.map((feat, idx) => (
                             <li
                                 key={idx}
                                 style={{
-                                    cursor: 'pointer',
                                     color: highlightedId === feat.id ? '#f43f5e' : '#1d4ed8',
-                                    fontWeight: highlightedId === feat.id ? 'bold' : 'normal'
+                                    fontWeight: highlightedId === feat.id ? 'bold' : 'normal',
                                 }}
                                 onClick={() => handleResultClick(feat)}
                             >
@@ -403,49 +388,45 @@ const MapViewWithSidebar = () => {
                 )}
 
                 {Object.keys(layerVisibility).map((layer) => (
-                    <div key={layer}>
-                        <label>
-                            <input type="checkbox" checked={layerVisibility[layer]} onChange={() => toggleLayer(layer)} /> {layer}
-                        </label>
-                    </div>
+                    <label key={layer}>
+                        <input
+                            type="checkbox"
+                            checked={layerVisibility[layer]}
+                            onChange={() => toggleLayer(layer)}
+                        />{' '}
+                        {layer}
+                    </label>
                 ))}
 
-                <div style={{ marginTop: '1rem' }}>
+                <div>
                     <label htmlFor="amenityFilter">Amenity type:</label>
                     <select
                         id="amenityFilter"
                         value={amenityFilter}
                         onChange={(e) => setAmenityFilter(e.target.value)}
-                        style={{ width: '100%', marginTop: '4px' }}
                     >
                         {availableAmenities.map((type) => (
-                            <option key={type} value={type}>{type || 'All'}</option>
+                            <option key={type} value={type}>
+                                {type || 'All'}
+                            </option>
                         ))}
                     </select>
-                    <button onClick={handleClearFilters} style={{ marginTop: '8px' }}>Clear Filters</button>
                 </div>
 
                 {selectedFeature && (
-                    <div style={{ marginTop: '1rem' }}>
-                        {/*<h4>Selected Feature</h4>*/}
-                        {/*<ul style={{ fontSize: '14px' }}>*/}
-                        {/*    {Object.entries(selectedFeature.properties).map(([k, v]) => (*/}
-                        {/*        <li key={k}><strong>{k}</strong>: {v}</li>*/}
-                        {/*    ))}*/}
-                        {/*</ul>*/}
-                        <button onClick={handleDownload} style={{ marginTop: '10px' }}>Download JSON</button>
+                    <div className="download-section">
+                        <button onClick={handleDownload}>Download JSON</button>
                     </div>
                 )}
-                <div  style={{ backgroundColor: 'gray', padding: '1rem' }}>
-                    <DialogflowChat  />
+
+                <div className="dialogflow-box">
+                    <DialogflowChat />
                 </div>
             </div>
 
-
-
             <div ref={mapContainer} style={{ flexGrow: 1, height: '100%' }} />
-
         </div>
+
     );
 };
 
